@@ -12,18 +12,13 @@ import geopy
 import math
 
 class vars(object):
-    '''username = 'UAS'
+    username = 'UAS'
     password = 'UAS'
     host = '127.0.0.1'
     vhost = 'UASHost'
-    exchange = 'UAS'''''
+    exchange = 'UAS'
 
 
-    username = 'sentinel'
-    password = 'sentinel'
-    host = '127.0.0.1'
-    vhost = 'sentinelvhost'
-    exchange = 'sentinel'
 
     commands = str()
     rabbit = object
