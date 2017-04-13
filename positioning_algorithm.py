@@ -16,17 +16,24 @@ send_keys = [""]
 
 
 def callback(ch, method, properties, body):
-    print "body: " + str(body)
+    #print "body: " + str(body)
     try:
         input = body.split(",")
         if method.routing_key == "interface.launch":
-            #TODO: Send 2 different commands, one on each copter ID
-            out1 = "Launch,1," + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
-            print out1
-            out2 = "Launch,2," + str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
-            print out2
-            publishSomething( out1, "Autopilot.commands")
+            if input[0] == "startFlight":
+                #TODO: Send 2 different commands, one on each copter ID
+                out1 = "Launch,1" #+ str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
+                print out1
+                out2 = "Launch,2" #+ str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
+                print out2
+                publishSomething( out1, "Autopilot.commands")
+                publishSomething(out2, "Autopilot.commands")
+            elif input[0] == "guide":
+                out1 = "guide,1," + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
 
+                out2 = "guide,2,"  + str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
+                publishSomething(out1, "Autopilot.commands")
+                publishSomething(out2, "Autopilot.commands")
     except:
         print "failed to do anything useful"
 

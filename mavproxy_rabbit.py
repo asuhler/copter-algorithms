@@ -10,6 +10,7 @@ from MAVProxy.modules.lib import mp_module
 from geopy.distance import vincenty, VincentyDistance
 import geopy
 import math
+import traceback
 
 class vars(object):
     username = 'UAS'
@@ -30,6 +31,8 @@ class vars(object):
     destBearing = float(0.000)
     waypoint = int()
     moduleName = "rabbit"
+    ID = 1
+    defaultAlt = float(5)
 
 
     def startRabbit(self):
@@ -143,6 +146,29 @@ def callback(ch, method, properties, body):
                     else:
                         print "No actionable commands in Jump packet"
 
+                elif input[0] == "Launch":
+                    if int(input[1]) is vars.ID:
+                        print "This command was meant for me"
+                        print input
+                        args = [vars.defaultAlt] #,str(input[2]),str(input[3])]
+                        sendTakeoff(args)
+
+                    else:
+                        print "this command was meant for the other copter"
+                        print input
+
+                elif input[0] == "guide":
+                    if int(input[1]) is vars.ID:
+                        print "This command was meant for me"
+                        print input
+                        args = [str(input[2]),str(input[3]),vars.defaultAlt]
+                        sendGuidedPoint(args)
+
+                    else:
+                        print "this command was meant for the other copter"
+                        print input
+
+
             else:
                 print "Empty message received from rabbit"
         elif method.routing_key == "Waypoint.track":
@@ -159,6 +185,9 @@ def callback(ch, method, properties, body):
 
     except KeyboardInterrupt:
         consume.stop()
+    except:
+        print "it failed here"
+        traceback.print_exc()
 
 def startConsuming():
     try:
@@ -179,7 +208,7 @@ def sendMove(args):
     Vars.rabbit.move(args)
 
 def sendTakeoff(args):
-    Vars.rabbit.move(args)
+    Vars.rabbit.cmd_takeoff(args)
 
 
 def sendJump(args):
@@ -192,8 +221,6 @@ class Rabbit(mp_module.MPModule):
         self.add_command('Loiter', self.sendGuided, "send guided command")
         self.add_command('Land', self.land, "Lands the copter at its current location")
         self.add_command('Move', self.move, "Moves to a point: given dist(meters) bearing alt(meters")
-        self.add_command('myTakeoff', self.cmd_takeoff, "takeoff")
-
         self.add_command('jump', self.jump, "jumps to a waypoint")
         #print "command added"
         Vars.startRabbit()
@@ -228,7 +255,7 @@ class Rabbit(mp_module.MPModule):
                                            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
                                            2, 0, 1, 0, 0, 0,
                                            Vars.destLat, Vars.destLon, alt)
-            self.master.mav.set_mode_send(self.master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 4) #4 for copters, #8 for planes, #6 for rover
+            #self.master.mav.set_mode_send(self.master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 4) #4 for copters, #8 for planes, #6 for rover
         #else:
                # print "Invalid bearing: between 0 and 360"
         else:
@@ -239,47 +266,72 @@ class Rabbit(mp_module.MPModule):
         self.master.mav.set_mode_send(self.master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 9)
 
     def sendGuided(self, args):
-        #print args
-        if len(args) == 3:
-            lat = float(args[0])
-            lon = float(args[1])
-            alt = float(args[2])
-            print "sending a guided point yay!!!!"
-            self.master.mav.mission_item_send (self.status.target_system,
-                                               self.status.target_component,
-                                               0,
-                                               0,
-                                               mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
-                                               2, 0, 1, 0, 0, 0,
-                                               lat, lon, alt)
-            self.master.mav.set_mode_send(self.master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 4) #4 for copters, #8 for planes
-        else:
-            print "Failed to enter arguments correctly: Usage: Loiter lat lon alt"
+        try:
+            print "arguments in sendGuided: " + str(args)
+            if len(args) == 3:
+                lat = float(args[0])
+                lon = float(args[1])
+                alt = float(args[2])
+                print str(lat) + "," + str(lon) + "," + str(alt)
+                self.master.mav.mission_item_send(self.settings.target_system,
+                                                  self.settings.target_component,
+                                                  0,
+                                                  self.module('wp').get_default_frame(),
+                                                  mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+                                                  2, 0, 0, 0, 0, 0,
+                                                  lat, lon, alt)
+                self.master.mav.set_mode_send(self.master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 4) #4 for copters, #8 for planes
+            else:
+                print "Failed to enter arguments correctly: Usage: Loiter lat lon alt"
+                return
+        except:
             return
 
     def cmd_takeoff(self, args):
-        '''take off'''
-        if (len(args) != 1):
-            print("Usage: takeoff ALTITUDE_IN_METERS")
+        try:
+            '''take off'''
+            mode_mapping = self.master.mode_mapping()
+            mode = 'GUIDED'
+            if mode not in mode_mapping:
+                print "oops"
+                return
+            else:
+                modenum = mode_mapping[mode]
+
+
+
+            if (len(args) < 1):
+                print("Usage: takeoff ALTITUDE_IN_METERS")
+                return
+
+            if (len(args) == 1):
+                altitude = float(args[0])
+                print "Takeoff Altitude: " + str(altitude)
+                print("Take Off started")
+                #argsOut = [str(args[1]), str(args[2]), altitude]
+                self.master.set_mode(modenum)
+                self.master.arducopter_arm()
+                self.master.mav.command_long_send(
+                    self.settings.target_system,  # target_system
+                    mavutil.mavlink.MAV_COMP_ID_SYSTEM_CONTROL,  # target_component
+                    mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,  # command
+                    0,  # confirmation
+                    0,  # param1
+                    0,  # param2
+                    0,  # param3
+                    0,  # param4
+                    0,  # param5
+                    0,  # param6
+                    altitude)  # param7
+                #sendGuidedPoint(argsOut)
+        except:
+            traceback.print_exc()
             return
 
-        if (len(args) == 1):
-            altitude = float(args[0])
-            print("Take Off started")
-            self.master.mav.command_long_send(
-                self.settings.target_system,  # target_system
-                mavutil.mavlink.MAV_COMP_ID_SYSTEM_CONTROL,  # target_component
-                mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,  # command
-                0,  # confirmation
-                0,  # param1
-                0,  # param2
-                0,  # param3
-                0,  # param4
-                0,  # param5
-                0,  # param6
-                altitude)  # param7
 
-    def mavlink_packet(self, m):
+
+
+    #def mavlink_packet(self, m):
         '''
         #handle a mavlink packet
         mtype = m.get_type()
