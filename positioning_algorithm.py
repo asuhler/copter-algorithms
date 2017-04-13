@@ -1,33 +1,10 @@
-from math import cos, sin, atan2, sqrt
 import math
 import traceback
 import os
+from gpsFunctions import center_geolocation, bearingToPoint, distanceToCoordinates, newCoordinates
 
 
 
-def center_geolocation(geolocations):
-    """
-    Provide a relatively accurate center lat, lon returned as a list pair, given
-    a list of list pairs.
-    ex: in: geolocations = ((lat1,lon1), (lat2,lon2),)
-        out: (center_lat, center_lon)
-    """
-    x = 0
-    y = 0
-    z = 0
-
-    for lat, lon in geolocations:
-        lat = float(lat)
-        lon = float(lon)
-        x += cos(lat) * cos(lon)
-        y += cos(lat) * sin(lon)
-        z += sin(lat)
-
-    x = float(x / len(geolocations))
-    y = float(y / len(geolocations))
-    z = float(z / len(geolocations))
-
-    return ( atan2(z, sqrt(x * x + y * y)),atan2(y, x))
 
 class Vars():
     placeholder = ""
@@ -37,14 +14,15 @@ class Vars():
     left_center = 0.0
     right_center = 0.0
 
+    copter_max_distance = float(8) #meters
+
 vars = Vars()
 try:
     pointIO = open("coordinates.txt", 'r')
     for line in pointIO:
         data = line.strip(" ").strip('\r').strip('\n').split(",")
-        data = (float(math.radians(float(data[0]))),float(math.radians(float(data[1]))))
+        data = [float(math.radians(float(data[0]))),float(math.radians(float(data[1])))]
         vars.coordinate_array.append(data)
-        print data
 
 
 except:
@@ -77,3 +55,38 @@ vars.left_center = center_geolocation(vars.left)
 vars.right_center = center_geolocation(vars.right)
 print "Lcenter: " + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
 print "Rcenter: " + str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
+
+
+def printEverything():
+    for x in vars.coordinate_array:
+        print str(math.degrees(x[0])) + "," + str(math.degrees(x[1]))
+    print str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
+    print str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
+
+
+#Check distance between copters for maximum distances
+
+dist = distanceToCoordinates(math.degrees(vars.left_center[0]), math.degrees(vars.left_center[1]), math.degrees(vars.right_center[0]), math.degrees(vars.right_center[1]))
+print "dist: " + str(dist)
+if dist > vars.copter_max_distance:
+    #get bearing from right center to left center
+    bearing = bearingToPoint(math.degrees(vars.left_center[0]), math.degrees(vars.left_center[1]), math.degrees(vars.right_center[0]), math.degrees(vars.right_center[1]))
+    #print bearing
+    move_dist = float((dist-vars.copter_max_distance)/2)   #grab half distance required move copter
+    new_coords = newCoordinates(move_dist, bearing, math.degrees(vars.right_center[0]), math.degrees(vars.right_center[1]))
+    vars.right_center[0] = math.radians(new_coords[0])
+    vars.right_center[1] = math.radians(new_coords[1])
+    #print new_coords
+
+    #move left center
+    bearing = bearingToPoint(math.degrees(vars.right_center[0]), math.degrees(vars.right_center[1]), math.degrees(vars.left_center[0]), math.degrees(vars.left_center[1]))
+    new_coords = newCoordinates(move_dist, bearing, math.degrees(vars.left_center[0]), math.degrees(vars.left_center[1]))
+    vars.left_center[0] = math.radians(new_coords[0])
+    vars.left_center[1] = math.radians(new_coords[1])
+
+
+
+    print "Lcenter: " + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
+    print "Rcenter: " + str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
+
+#printEverything()
