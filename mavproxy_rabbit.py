@@ -31,6 +31,7 @@ class vars(object):
     waypoint = int()
     moduleName = "rabbit"
 
+
     def startRabbit(self):
 
         creds = pika.PlainCredentials(username=self.username, password=self.password)
@@ -115,6 +116,7 @@ def callback(ch, method, properties, body):
     try:
         input = body.split(",")
         if method.routing_key == "Autopilot.commands":
+            #TODO: Add takeoff callback function
             print "[x] %s: %s: %s" % (str(time.time()), method.routing_key, str(body))
             if len(input)>0:
                 if input[0] == "Loiter":
@@ -176,6 +178,9 @@ def sendLand(args):
 def sendMove(args):
     Vars.rabbit.move(args)
 
+def sendTakeoff(args):
+    Vars.rabbit.move(args)
+
 
 def sendJump(args):
     Vars.rabbit.jump(args)
@@ -187,6 +192,7 @@ class Rabbit(mp_module.MPModule):
         self.add_command('Loiter', self.sendGuided, "send guided command")
         self.add_command('Land', self.land, "Lands the copter at its current location")
         self.add_command('Move', self.move, "Moves to a point: given dist(meters) bearing alt(meters")
+        self.add_command('myTakeoff', self.cmd_takeoff, "takeoff")
 
         self.add_command('jump', self.jump, "jumps to a waypoint")
         #print "command added"
@@ -222,7 +228,7 @@ class Rabbit(mp_module.MPModule):
                                            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
                                            2, 0, 1, 0, 0, 0,
                                            Vars.destLat, Vars.destLon, alt)
-            self.master.mav.set_mode_send(self.master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 6) #4 for copters, #8 for planes, #6 for rover
+            self.master.mav.set_mode_send(self.master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 4) #4 for copters, #8 for planes, #6 for rover
         #else:
                # print "Invalid bearing: between 0 and 360"
         else:
@@ -251,8 +257,31 @@ class Rabbit(mp_module.MPModule):
             print "Failed to enter arguments correctly: Usage: Loiter lat lon alt"
             return
 
+    def cmd_takeoff(self, args):
+        '''take off'''
+        if (len(args) != 1):
+            print("Usage: takeoff ALTITUDE_IN_METERS")
+            return
+
+        if (len(args) == 1):
+            altitude = float(args[0])
+            print("Take Off started")
+            self.master.mav.command_long_send(
+                self.settings.target_system,  # target_system
+                mavutil.mavlink.MAV_COMP_ID_SYSTEM_CONTROL,  # target_component
+                mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,  # command
+                0,  # confirmation
+                0,  # param1
+                0,  # param2
+                0,  # param3
+                0,  # param4
+                0,  # param5
+                0,  # param6
+                altitude)  # param7
+
     def mavlink_packet(self, m):
-        '''handle a mavlink packet'''
+        '''
+        #handle a mavlink packet
         mtype = m.get_type()
         #print m
         if mtype=="HEARTBEAT":
@@ -347,11 +376,13 @@ class Rabbit(mp_module.MPModule):
                 publishSomething(out2, "GPS1")
                 publishSomething(out2, "GPS2")
                 #publishSomething("Lat: " + str(gpsdata[0]) + "   Lon: " + str(gpsdata[1]), "Hello.out")
+                
 
             else:
                 print "NoGPS data in packet, something went realllyyy wrong"
         #elif mtype == "SYS_STATUS":
             #print m
+            '''
 
 
 

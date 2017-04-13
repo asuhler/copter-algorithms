@@ -2,6 +2,88 @@ import math
 import traceback
 import os
 from gpsFunctions import center_geolocation, bearingToPoint, distanceToCoordinates, newCoordinates
+import pika
+
+username = 'UAS'
+password = 'UAS'
+host = '127.0.0.1'
+vhost = 'UASHost'
+exchange = 'UAS'
+send_keys = [""]
+
+
+
+
+
+def callback(ch, method, properties, body):
+    print "body: " + str(body)
+    try:
+        input = body.split(",")
+        if method.routing_key == "interface.launch":
+            #TODO: Send 2 different commands, one on each copter ID
+            out1 = "Launch,1," + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
+            print out1
+            out2 = "Launch,2," + str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
+            print out2
+            publishSomething( out1, "Autopilot.commands")
+
+    except:
+        print "failed to do anything useful"
+
+
+
+creds = pika.PlainCredentials(username=username, password=password)
+
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(\
+    host = host,\
+    virtual_host = vhost,\
+    credentials = creds))
+channel = connection.channel()
+
+channel.exchange_declare(exchange = exchange, \
+                         type = 'topic')
+
+
+connectionPublish = pika.BlockingConnection(pika.ConnectionParameters(\
+    host = host,\
+    virtual_host = vhost,\
+    credentials = creds))
+
+publishChannel = connectionPublish.channel()
+
+publishChannel.exchange_declare(exchange = exchange, \
+                     type = 'topic')
+
+
+
+result = channel.queue_declare(exclusive = True)
+queue_name = result.method.queue
+
+binding_keys = ["interface.launch"]
+i = 0
+while i<len(binding_keys):
+    channel.queue_bind(exchange = exchange, \
+           queue = queue_name, \
+           routing_key = binding_keys[i])
+    i=i+1
+
+channel.basic_consume(callback, \
+              queue = queue_name, \
+              no_ack = True)
+
+channel.basic_consume(callback, \
+                           queue=queue_name, \
+                           no_ack=True)
+
+def publishSomething(body, key):
+    try:
+        publishChannel.basic_publish(exchange=exchange, \
+        routing_key=key,\
+        body=body)
+        print "published something"
+    except:
+        print " [x] %s" % ("Failed to publish to the rabbit server")
 
 
 
@@ -90,3 +172,10 @@ if dist > vars.copter_max_distance:
     print "Rcenter: " + str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
 
 #printEverything()
+
+
+
+
+print "made it to the consume"
+while 1:
+    channel.start_consuming()
