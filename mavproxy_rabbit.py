@@ -43,7 +43,8 @@ class vars(object):
             self.connection = pika.BlockingConnection(pika.ConnectionParameters(\
                 host = self.host,\
                 virtual_host = self.vhost,\
-                credentials = creds))
+                credentials = creds,
+                heartbeat_interval = 0))
             self.channel = self.connection.channel()
 
             self.channel.exchange_declare(exchange = self.exchange, \
@@ -56,7 +57,8 @@ class vars(object):
             self.connectionPublish = pika.BlockingConnection(pika.ConnectionParameters(\
                 host = self.host,\
                 virtual_host = self.vhost,\
-                credentials = creds))
+                credentials = creds,
+                heartbeat_interval=0))
 
             self.publishChannel = self.connectionPublish.channel()
 

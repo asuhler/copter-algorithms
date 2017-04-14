@@ -45,7 +45,8 @@ creds = pika.PlainCredentials(username=username, password=password)
 connection = pika.BlockingConnection(pika.ConnectionParameters(\
     host = host,\
     virtual_host = vhost,\
-    credentials = creds))
+    credentials = creds,
+    heartbeat_interval=0))
 channel = connection.channel()
 
 channel.exchange_declare(exchange = exchange, \
@@ -55,7 +56,8 @@ channel.exchange_declare(exchange = exchange, \
 connectionPublish = pika.BlockingConnection(pika.ConnectionParameters(\
     host = host,\
     virtual_host = vhost,\
-    credentials = creds))
+    credentials = creds,
+    heartbeat_interval=0))
 
 publishChannel = connectionPublish.channel()
 

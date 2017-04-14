@@ -14,7 +14,8 @@ try:
     connectionPublish = pika.BlockingConnection(pika.ConnectionParameters( \
         host=host, \
         virtual_host=vhost, \
-        credentials=creds))
+        credentials=creds,
+        heartbeat_interval=0))
 
     publishChannel = connectionPublish.channel()
 
@@ -22,6 +23,7 @@ try:
                                          type='topic')
     print " [x] %s" % ("Producer connected to rabbit server")
 except:
+    traceback.print_exc()
     print " [x] %s" % ( "Producer failed to connect to rabbit server")
 
 
@@ -50,6 +52,7 @@ class MyFirstGUI:
                                               body=body)
             print "Publishing"
         except:
+            traceback.print_exc()
             print " [x] %s" % ("Failed to publish to the rabbit server")
 
     def exit(self):
@@ -63,6 +66,7 @@ class MyFirstGUI:
                                          body=body)
             print "Publishing"
         except:
+            traceback.print_exc()
             print " [x] %s" % ("Failed to publish to the rabbit server")
 
 

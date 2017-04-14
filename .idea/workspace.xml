@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/positioning_algorithm.py" line="112" />
+    <bookmark url="file://$PROJECT_DIR$/positioning_algorithm.py" line="114" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2436a9af-f36c-48a1-b9d0-22fe2394bd15" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SITLStart.sh" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mavproxy_rabbit.py" afterPath="$PROJECT_DIR$/mavproxy_rabbit.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/positioning_algorithm.py" afterPath="$PROJECT_DIR$/positioning_algorithm.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/startFlight.py" afterPath="$PROJECT_DIR$/startFlight.py" />
@@ -30,10 +32,22 @@
       <file leaf-file-name="mavproxy_rabbit.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mavproxy_rabbit.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="164" column="45" lean-forward="true" selection-start-line="164" selection-start-column="45" selection-end-line="164" selection-end-column="45" />
+            <state relative-caret-position="90">
+              <caret line="60" column="36" lean-forward="false" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="36" />
               <folding>
                 <element signature="e#46#63#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="positioning_algorithm.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/positioning_algorithm.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-206">
+              <caret line="48" column="24" lean-forward="false" selection-start-line="48" selection-start-column="24" selection-end-line="48" selection-end-column="24" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -42,32 +56,10 @@
       <file leaf-file-name="startFlight.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/startFlight.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="58" column="22" lean-forward="true" selection-start-line="58" selection-start-column="22" selection-end-line="58" selection-end-column="22" />
+            <state relative-caret-position="274">
+              <caret line="23" column="25" lean-forward="false" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="startMavproxy.sh" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/startMavproxy.sh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="9" lean-forward="true" selection-start-line="0" selection-start-column="9" selection-end-line="0" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="positioning_algorithm.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/positioning_algorithm.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="35" column="60" lean-forward="true" selection-start-line="35" selection-start-column="60" selection-end-line="35" selection-end-column="60" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -106,9 +98,10 @@
         <option value="$PROJECT_DIR$/coordinates.txt" />
         <option value="$PROJECT_DIR$/gpsFunctions.py" />
         <option value="$PROJECT_DIR$/startMavproxy.sh" />
+        <option value="$PROJECT_DIR$/SITLStart.sh" />
         <option value="$PROJECT_DIR$/startFlight.py" />
-        <option value="$PROJECT_DIR$/positioning_algorithm.py" />
         <option value="$PROJECT_DIR$/mavproxy_rabbit.py" />
+        <option value="$PROJECT_DIR$/positioning_algorithm.py" />
       </list>
     </option>
   </component>
@@ -317,8 +310,8 @@
     </list>
     <recent_temporary>
       <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="Python.startFlight" />
-        <item index="1" class="java.lang.String" itemvalue="Python.positioning_algorithm" />
+        <item index="0" class="java.lang.String" itemvalue="Python.positioning_algorithm" />
+        <item index="1" class="java.lang.String" itemvalue="Python.startFlight" />
       </list>
     </recent_temporary>
     <configuration default="true" type="tests" factoryName="Attests">
@@ -356,12 +349,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="25" width="1922" height="951" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25773746" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22014925" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22014925" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -507,30 +499,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/positioning_algorithm.py">
+    <entry file="file://$PROJECT_DIR$/SITLStart.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="35" column="60" lean-forward="true" selection-start-line="35" selection-start-column="60" selection-end-line="35" selection-end-column="60" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="15">
+          <caret line="1" column="57" lean-forward="false" selection-start-line="1" selection-start-column="57" selection-end-line="1" selection-end-column="57" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/startFlight.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="58" column="22" lean-forward="true" selection-start-line="58" selection-start-column="22" selection-end-line="58" selection-end-column="22" />
+        <state relative-caret-position="274">
+          <caret line="23" column="25" lean-forward="false" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/positioning_algorithm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-206">
+          <caret line="48" column="24" lean-forward="false" selection-start-line="48" selection-start-column="24" selection-end-line="48" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mavproxy_rabbit.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="164" column="45" lean-forward="true" selection-start-line="164" selection-start-column="45" selection-end-line="164" selection-end-column="45" />
+        <state relative-caret-position="90">
+          <caret line="60" column="36" lean-forward="false" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="36" />
           <folding>
             <element signature="e#46#63#0" expanded="true" />
           </folding>
