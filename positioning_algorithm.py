@@ -107,7 +107,7 @@ class Vars():
     left_center = 0.0
     right_center = 0.0
 
-    copter_max_distance = float(8) #meters
+    copter_max_distance = float(10) #meters
 
 vars = Vars()
 try:
@@ -184,7 +184,8 @@ if dist > vars.copter_max_distance:
     print "Lcenter: " + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
     print "Rcenter: " + str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
 
-#printEverything()
+
+printEverything()
 
 
 
