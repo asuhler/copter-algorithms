@@ -149,6 +149,7 @@ def callback(ch, method, properties, body):
                         print "No actionable commands in Jump packet"
 
                 elif input[0] == "Launch":
+
                     if int(input[1]) is vars.ID:
                         print "This command was meant for me"
                         print input

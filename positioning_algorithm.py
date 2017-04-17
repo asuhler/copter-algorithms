@@ -29,9 +29,10 @@ def callback(ch, method, properties, body):
                 publishSomething( out1, "Autopilot.commands")
                 publishSomething(out2, "Autopilot.commands")
             elif input[0] == "guide":
-                out1 = "guide,1," + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
+                out1 = "guide,1," + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))  #Actual 2 copter values
 
                 out2 = "guide,2,"  + str(math.degrees(vars.right_center[0])) + ',' + str(math.degrees(vars.right_center[1]))
+                #out1 = "guide,1," + str(math.degrees(vars.center[0])) + "," + str(math.degrees(vars.center[1]))    #used to send a singular center if required
                 publishSomething(out1, "Autopilot.commands")
                 publishSomething(out2, "Autopilot.commands")
     except:
@@ -90,7 +91,7 @@ def publishSomething(body, key):
         publishChannel.basic_publish(exchange=exchange, \
         routing_key=key,\
         body=body)
-        print "published something"
+        print "published something: " + str(body)
     except:
         print " [x] %s" % ("Failed to publish to the rabbit server")
 
@@ -99,6 +100,7 @@ def publishSomething(body, key):
 
 class Vars():
     placeholder = ""
+    center=[]
     coordinate_array = []
     right = []
     left = []
@@ -123,6 +125,8 @@ except:
 
 
 center = center_geolocation(vars.coordinate_array)
+vars.center = center
+
 #center = (center[1], center[0])
 print "Center: " + str(math.degrees(center[0])) + "," + str(math.degrees(center[1]))
 for x in vars.coordinate_array:
@@ -134,14 +138,14 @@ for x in vars.coordinate_array:
 
 vars.left.append(center)
 vars.right.append(center)
-
-'''print "left: " + str(vars.left)
+'''
+print "left: " + str(vars.left)
 print "Right: " + str(vars.right)
 print str(math.degrees(vars.left[0][0])) + "," + str(math.degrees(vars.left[0][1]))
 print str(math.degrees(vars.left[1][0])) + "," + str(math.degrees(vars.left[1][1]))
 print str(math.degrees(vars.right[0][0])) + "," + str(math.degrees(vars.right[0][1]))
-print str(math.degrees(vars.right[1][0])) + "," + str(math.degrees(vars.right[1][1]))'''
-
+print str(math.degrees(vars.right[1][0])) + "," + str(math.degrees(vars.right[1][1]))
+'''
 vars.left_center = center_geolocation(vars.left)
 vars.right_center = center_geolocation(vars.right)
 print "Lcenter: " + str(math.degrees(vars.left_center[0])) + "," + str(math.degrees(vars.left_center[1]))
@@ -185,6 +189,8 @@ if dist > vars.copter_max_distance:
 
 
 
-print "made it to the consume"
+
+
+#print "made it to the consume"
 while 1:
     channel.start_consuming()
